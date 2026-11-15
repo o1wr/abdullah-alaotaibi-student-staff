@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CTF Solver</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--tx:#101828;--mut:#5a6578;--ac:#2f4bff;--on:#fff;--bd:#d9dfe8;--code:#eaeef5;--flag:#ffd24a;--flagtx:#2b2200;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--card:#171e2e;--tx:#e8ecf5;--mut:#98a3b8;--ac:#8196ff;--on:#0f1420;--bd:#2b3550;--code:#0b101b}}
+:root[data-theme="dark"]{--bg:#0f1420;--card:#171e2e;--tx:#e8ecf5;--mut:#98a3b8;--ac:#8196ff;--on:#0f1420;--bd:#2b3550;--code:#0b101b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.7 Tajawal,system-ui,"Segoe UI",Tahoma,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:2rem;margin:.2em 0 0;font-weight:800;letter-spacing:-.01em}
+.sub{color:var(--mut);margin:0 0 18px}
+nav{display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--bd);margin-bottom:18px}
+nav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mut);font:inherit;font-weight:700;padding:10px 14px;cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--tx);border-bottom-color:var(--ac)}
+button:focus-visible,textarea:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+section{display:none}section.on{display:block}
+textarea{width:100%;min-height:110px;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:12px;font:15px/1.5 ui-monospace,Menlo,Consolas,monospace;direction:ltr;text-align:left}
+.btn{background:var(--ac);color:var(--on);border:0;border-radius:8px;padding:10px 20px;font:inherit;font-weight:700;cursor:pointer;margin-top:10px}
+.btn.alt{background:var(--code);color:var(--tx)}
+.step{border:1px solid var(--bd);background:var(--card);border-radius:8px;padding:10px 12px;margin:10px 0}
+.step b{color:var(--ac)}
+pre,code{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr;text-align:left}
+pre{background:var(--code);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:6px 0;white-space:pre-wrap;word-break:break-all;font-size:14px}
+.flag{background:var(--flag);color:var(--flagtx);font-weight:800;padding:12px 14px;border-radius:8px;margin:12px 0;direction:ltr;text-align:left;word-break:break-all}
+.drop{border:2px dashed var(--bd);border-radius:10px;padding:28px;text-align:center;color:var(--mut);background:var(--card)}
+.drop.over{border-color:var(--ac)}
+details{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:700}
+ol,ul{padding-inline-start:22px;margin:.5em 0}
+.ex{display:flex;gap:8px;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;margin:6px 0}
+.ex code{overflow-wrap:anywhere;font-size:13px}
+.links a{display:inline-block;margin:4px 0 4px 10px;color:var(--ac);font-weight:700}
+footer{margin-top:36px;color:var(--mut);text-align:center;font-weight:700}
+.note{color:var(--mut);font-size:.92rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>CTF Solver</h1>
+<p class="sub">يشتغل بالكامل داخل المتصفح. بدون سيرفر وبدون بورت، وملفاتك ما تنرفع لأي مكان.</p>
+<nav role="tablist" id="tabs">
+ <button role="tab" aria-selected="true" data-t="dec">فك الشفرات</button>
+ <button role="tab" aria-selected="false" data-t="file">تحليل ملف أو صورة</button>
+ <button role="tab" aria-selected="false" data-t="hint">طريقة الحل</button>
+ <button role="tab" aria-selected="false" data-t="ex">أمثلة</button>
+ <button role="tab" aria-selected="false" data-t="tools">أدوات</button>
+</nav>
+
+<section id="dec" class="on">
+ <p>الصق النص المشفر. الأداة تجرب Base64 وBase32 وHex وBinary وMorse وURL وROT13 وCaesar وAtbash وXOR وVigenere وتفك عدة طبقات.</p>
+ <textarea id="inp" placeholder="مثال: ZmxhZ3toZWxsb19jdGZ9" spellcheck="false"></textarea>
+ <button class="btn" id="go">فك التشفير</button>
+ <div id="out" aria-live="polite"></div>
+</section>
+
+<section id="file">
+ <div class="drop" id="drop">اسحب صورة أو ملف هنا، أو <button class="btn alt" id="pick" style="margin:0">اختر ملف</button><input type="file" id="fi" hidden></div>
+ <div id="fout" aria-live="polite"></div>
+</section>
+
+<section id="hint"><div id="hints"></div></section>
+<section id="ex"><p>اضغط «جرّب» وينتقل النص لخانة فك الشفرات.</p><div id="exs"></div></section>
+
+<section id="tools" class="links">
+ <p>مواقع تفيدك مع أي تحدي:</p>
+ <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener">CyberChef</a>
+ <a href="https://www.dcode.fr/en" target="_blank" rel="noopener">dCode</a>
+ <a href="http://factordb.com/" target="_blank" rel="noopener">FactorDB</a>
+ <a href="https://crackstation.net/" target="_blank" rel="noopener">CrackStation</a>
+ <a href="https://lens.google.com/" target="_blank" rel="noopener">Google Lens</a>
+ <a href="https://yandex.com/images/" target="_blank" rel="noopener">Yandex Images</a>
+ <a href="https://tineye.com/" target="_blank" rel="noopener">TinEye</a>
+ <a href="https://www.aperisolve.com/" target="_blank" rel="noopener">Aperi’Solve (stego)</a>
+ <a href="https://jwt.io/" target="_blank" rel="noopener">jwt.io</a>
+ <a href="https://www.virustotal.com/" target="_blank" rel="noopener">VirusTotal</a>
+ <a href="https://web.archive.org/" target="_blank" rel="noopener">Wayback Machine</a>
+ <a href="https://cybertalents.com/challenges/all" target="_blank" rel="noopener">CyberTalents</a>
+ <p class="note">للأسئلة اللي ما تنحل بالأداة، انسخ وصف التحدي وارسله لـ Claude في المحادثة وأشرح لك الحل خطوة خطوة.</p>
+</section>
+
+<footer>dev by : "abdullah alaotaibi school" student staff</footer>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+/* ---------- tabs ---------- */
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));
+});
+/* ---------- decoders ---------- */
+const KNOWN=/\b(?:flag|ctf|cyber|cybertalents|htb|thm|picoctf)\{[\w\-!@#$%^&*.,:;?+= \/]{2,100}\}/i;
+const CLEAN=/[A-Za-z0-9_]{2,15}\{[\w\-!@#$%^&*.,:;?+= \/]{3,100}\}|\b[a-f0-9]{32}\b|\b[a-f0-9]{40}\b|\b[a-f0-9]{64}\b/;
+const WORDS=new Set("the be to of and a in that have it for not on with he as you do at this but his by from they we say her she or an will my one all would there their is are was this test hello flag secret password admin key".split(" "));
+const ENC=new Set(["base64","base32","hex","binary","url","decimal","octal","morse"]);
+const MORSE={'.-':'A','-...':'B','-.-.':'C','-..':'D','.':'E','..-.':'F','--.':'G','....':'H','..':'I','.---':'J','-.-':'K','.-..':'L','--':'M','-.':'N','---':'O','.--.':'P','--.-':'Q','.-.':'R','...':'S','-':'T','..-':'U','...-':'V','.--':'W','-..-':'X','-.--':'Y','--..':'Z','-----':'0','.----':'1','..---':'2','...--':'3','....-':'4','.....':'5','-....':'6','--...':'7','---..':'8','----.':'9'};
+const bytes2s=b=>Array.from(b,c=>String.fromCharCode(c)).join("");
+const s2bytes=s=>Uint8Array.from(s,c=>c.charCodeAt(0)&255);
+const printable=s=>s.length?[...s].filter(c=>{const k=c.charCodeAt(0);return(k>=32&&k<127)||k==9||k==10||k==13}).length/s.length:0;
+const score=s=>s.toLowerCase().split(/[^a-z]+/).filter(w=>WORDS.has(w)).length;
+const shift=(t,k)=>t.replace(/[a-z]/gi,c=>{const b=c<'a'?65:97;return String.fromCharCode((c.charCodeAt(0)-b+k+26)%26+b)});
+const vig=(t,key)=>{let i=0;return t.replace(/[a-z]/gi,c=>{const b=c<'a'?65:97,k=key.charCodeAt(i++%key.length)-97;return String.fromCharCode((c.charCodeAt(0)-b-k+26)%26+b)})};
+function b32(t){const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";let bits="";for(const c of t.toUpperCase().replace(/=+$/,"")){const i=A.indexOf(c);if(i<0)throw 0;bits+=i.toString(2).padStart(5,"0")}
+ const o=[];for(let i=0;i+8<=bits.length;i+=8)o.push(parseInt(bits.slice(i,i+8),2));return bytes2s(o)}
+function decoders(t){
+ const r=[],add=(n,v)=>{if(typeof v==="string"&&v!==t&&v.length)r.push([n,v])};
+ const T=t.trim();
+ const tryit=(n,f)=>{try{add(n,f())}catch(e){}};
+ tryit("base64",()=>{if(!/^[A-Za-z0-9+/_\-=\s]{4,}$/.test(T))throw 0;return bytes2s(Uint8Array.from(atob(T.replace(/\s/g,"").replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0)))});
+ tryit("base32",()=>{if(!/^[A-Za-z2-7=\s]{8,}$/.test(T))throw 0;return b32(T.replace(/\s/g,""))});
+ tryit("hex",()=>{const h=T.replace(/0x|[\s:,]/g,"");if(!/^([0-9a-f]{2})+$/i.test(h))throw 0;return bytes2s(h.match(/../g).map(x=>parseInt(x,16)))});
+ tryit("binary",()=>{const g=T.match(/[01]{8}/g);if(!g||g.join("").length<T.replace(/\s/g,"").length*0.9)throw 0;return bytes2s(g.map(x=>parseInt(x,2)))});
+ tryit("decimal",()=>{if(!/^[\d\s,]+$/.test(T))throw 0;const n=T.split(/[\s,]+/).map(Number);if(n.some(x=>x>255))throw 0;return bytes2s(n)});
+ tryit("octal",()=>{if(!/^[0-7\s]+$/.test(T))throw 0;return bytes2s(T.split(/\s+/).map(x=>parseInt(x,8)))});
+ tryit("url",()=>decodeURIComponent(T));
+ tryit("morse",()=>{if(!/^[.\-\/\s]+$/.test(T))throw 0;return T.split(/\s*\/\s*|\s{3,}/).map(w=>w.split(/\s+/).map(c=>MORSE[c]||"?").join("")).join(" ")});
+ add("reverse",[...T].reverse().join(""));
+ add("rot13",shift(T,13));
+ add("atbash",T.replace(/[a-z]/gi,c=>String.fromCharCode((c<'a'?155:219)-c.charCodeAt(0))));
+ for(let k=1;k<26;k++){if(k!==13)add("caesar +"+k,shift(T,k))}
+ const b=s2bytes(T);
+ for(let k=1;k<256;k++)add("xor "+k,bytes2s(b.map(c=>c^k)));
+ for(const key of ["key","flag","ctf","secret","password","admin","cyber","talents","cybertalents"])add("vigenere "+key,vig(T,key));
+ return r;
+}
+const meaningful=(n,v)=>KNOWN.test(v)||(ENC.has(n)?(printable(v)>0.95&&v.length>=3):score(v)>=2);
+function solve(text){
+ const seen=new Set([text]);let q=[[text,"",0]],steps=[],found=null;
+ while(q.length&&!found&&steps.length<40){
+  const [cur,path,d]=q.shift();if(d>=4)continue;
+  for(const [n,v] of decoders(cur)){
+   if(seen.has(v)||!meaningful(n,v))continue;seen.add(v);
+   const p=path?path+" ← "+n:n;steps.push([p,v]);
+   const m=v.match(KNOWN)||(ENC.has(n)?v.match(CLEAN):null);
+   if(m){found=[m[0],p];break}
+   q.push([v,p,d+1]);
+  }}
+ return{steps,found};
+}
+function runDecoder(){
+ const t=$("#inp").value;if(!t.trim()){$("#out").innerHTML='<p class="note">اكتب أو الصق نص أول.</p>';return}
+ const {steps,found}=solve(t);let h="";
+ if(found)h+=`<div class="flag">FLAG: ${esc(found[0])}<br><small>الطريقة: ${esc(found[1])}</small></div>`;
+ h+=steps.map(([p,v])=>`<div class="step"><b>${esc(p)}</b><pre>${esc(v.slice(0,400))}</pre></div>`).join("");
+ if(!steps.length)h+='<p>ما لقيت فك واضح. جرب شفرة بمفتاح (Vigenere/XOR مع مفتاح معروف) أو راجع تبويب «طريقة الحل».</p>';
+ else if(!found)h+='<p class="note">ما ظهر فلاق جاهز. راجع الطبقات فوق، ممكن تحتاج خطوة يدوية.</p>';
+ $("#out").innerHTML=h;
+}
+$("#go").onclick=runDecoder;
+/* ---------- file analyzer ---------- */
+const MAGIC=[["FFD8FF","JPEG"],["89504E47","PNG"],["47494638","GIF"],["25504446","PDF"],["504B0304","ZIP / DOCX / APK / JAR"],["52617221","RAR"],["377ABCAF","7z"],["7F454C46","ELF"],["4D5A","EXE / DLL (PE)"],["1F8B","GZIP"],["494433","MP3"],["52494646","WAV / AVI / WEBP"],["D0CF11E0","OLE (doc/xls)"],["SQLite","SQLite"]];
+function exif(b){
+ if(b[0]!==0xFF||b[1]!==0xD8)return null;let i=2,out={};
+ while(i<b.length-4){if(b[i]!==0xFF)break;const m=b[i+1],len=(b[i+2]<<8)|b[i+3];
+  if(m===0xE1&&bytes2s(b.slice(i+4,i+8))==="Exif"){const t=i+10,le=b[t]===0x49,
+   u16=o=>le?b[o]|(b[o+1]<<8):(b[o]<<8)|b[o+1],u32=o=>le?(b[o]|(b[o+1]<<8)|(b[o+2]<<16)|(b[o+3]<<24))>>>0:((b[o]<<24)|(b[o+1]<<16)|(b[o+2]<<8)|b[o+3])>>>0;
+   const asc=(o,n)=>bytes2s(b.slice(n>4?t+u32(o+8):o+8,(n>4?t+u32(o+8):o+8)+n)).replace(/\0.*$/,"");
+   const rat=o=>u32(o+4)?u32(o)/u32(o+4):0;
+   const ifd=(off,cb)=>{const n=u16(t+off);for(let k=0;k<n;k++)cb(u16(t+off+2+k*12),t+off+2+k*12)};
+   let gps=0,exo=0;
+   ifd(u32(t+4),(tag,o)=>{if(tag===0x010F)out.Make=asc(o,u32(o+4));if(tag===0x0110)out.Model=asc(o,u32(o+4));if(tag===0x0131)out.Software=asc(o,u32(o+4));if(tag===0x0132)out.Date=asc(o,u32(o+4));if(tag===0x8825)gps=u32(o+8);if(tag===0x8769)exo=u32(o+8)});
+   if(exo)ifd(exo,(tag,o)=>{if(tag===0x9003)out.Taken=asc(o,u32(o+4))});
+   if(gps){const g={};ifd(gps,(tag,o)=>{const p=t+u32(o+8);if(tag===1||tag===3)g[tag]=String.fromCharCode(b[o+8]);if(tag===2||tag===4)g[tag]=rat(p)+rat(p+8)/60+rat(p+16)/3600});
+    if(g[2]!=null&&g[4]!=null){const la=(g[1]==="S"?-1:1)*g[2],lo=(g[3]==="W"?-1:1)*g[4];out.GPS=la.toFixed(6)+", "+lo.toFixed(6);out.map="https://www.google.com/maps?q="+la+","+lo}}
+   return out}
+  i+=2+len}
+ return out}
+function analyze(file){
+ const rd=new FileReader();rd.onload=()=>{
+  const b=new Uint8Array(rd.result),hex=Array.from(b.slice(0,8),x=>x.toString(16).padStart(2,"0")).join("").toUpperCase();
+  const s=bytes2s(b);let h=`<div class="step"><b>${esc(file.name)}</b> — ${b.length.toLocaleString()} bytes`;
+  const mg=MAGIC.find(([m])=>m==="SQLite"?s.startsWith("SQLite format"):hex.startsWith(m));h+=`<br>النوع حسب البداية: ${mg?mg[1]:"غير معروف"}`;
+  if(mg&&!file.name.toLowerCase().includes(mg[1].slice(0,3).toLowerCase())&&mg[1]!=="ZIP / DOCX / APK / JAR")h+=`<br>تنبيه: امتداد الملف ممكن مو مطابق لنوعه الحقيقي.`;h+="</div>";
+  const ex=exif(b);
+  if(ex&&Object.keys(ex).length){h+='<div class="step"><b>EXIF</b><pre>'+esc(Object.entries(ex).filter(([k])=>k!=="map").map(([k,v])=>k+": "+v).join("\n"))+"</pre>";
+   if(ex.map)h+=`<a href="${ex.map}" target="_blank" rel="noopener">افتح الموقع على الخريطة</a>`;h+="</div>"}
+  let extra=-1;
+  if(hex.startsWith("FFD8")){const i=s.lastIndexOf("\xFF\xD9");if(i>0&&i+2<b.length)extra=i+2}
+  if(hex.startsWith("89504E47")){const i=s.lastIndexOf("IEND");if(i>0&&i+8<b.length)extra=i+8}
+  if(extra>0&&b.slice(extra).some(x=>x))h+=`<div class="step"><b>بيانات مخفية بعد نهاية الصورة (${b.length-extra} byte)</b><pre>${esc(s.slice(extra,extra+300))}</pre></div>`;
+  const emb=[["PK\x03\x04","ZIP"],["Rar!","RAR"],["%PDF","PDF"],["\x7fELF","ELF"],["7z\xBC\xAF","7z"]].map(([m,n])=>[n,s.indexOf(m,4)]).filter(x=>x[1]>0);
+  if(emb.length)h+=`<div class="step"><b>ملفات مدمجة:</b> ${emb.map(([n,i])=>n+" عند "+i).join(" ، ")}<br><span class="note">جرّب: binwalk -e FILE</span></div>`;
+  const strs=s.match(/[\x20-\x7e]{6,}/g)||[],hits=new Set();
+  strs.forEach(x=>{const m=x.match(KNOWN)||x.match(CLEAN);if(m)hits.add(m[0]);
+   if(/^[A-Za-z0-9+/=]{16,}$/.test(x)){try{const d=atob(x);if(printable(d)>0.9){const m2=d.match(KNOWN);hits.add(m2?m2[0]:"base64 → "+d.slice(0,80))}}catch(e){}}});
+  hits.forEach(f=>h+=`<div class="flag">${esc(f)}</div>`);
+  h+=`<details><summary>Strings (${strs.length})</summary><pre>${esc(strs.slice(0,150).join("\n"))}</pre></details>`;
+  h+=`<div class="links"><b>بحث عكسي بالصور:</b> <a href="https://lens.google.com/" target="_blank" rel="noopener">Google Lens</a><a href="https://yandex.com/images/" target="_blank" rel="noopener">Yandex</a><a href="https://tineye.com/" target="_blank" rel="noopener">TinEye</a><a href="https://www.aperisolve.com/" target="_blank" rel="noopener">Aperi’Solve</a></div>`;
+  $("#fout").innerHTML=h};
+ rd.readAsArrayBuffer(file)}
+const fi=$("#fi"),drop=$("#drop");$("#pick").onclick=()=>fi.click();fi.onchange=()=>fi.files[0]&&analyze(fi.files[0]);
+drop.ondragover=e=>{e.preventDefault();drop.classList.add("over")};drop.ondragleave=()=>drop.classList.remove("over");
+drop.ondrop=e=>{e.preventDefault();drop.classList.remove("over");e.dataTransfer.files[0]&&analyze(e.dataTransfer.files[0])};
+/* ---------- hints ---------- */
+const HINTS=[
+["Web",["شوف المصدر (Ctrl+U) والتعليقات","جرب /robots.txt و/sitemap.xml و/.git و/admin","افحص الكوكيز وJWT من تبويب Application","جرب SQLi: <code>' OR 1=1-- -</code>","جرب LFI: <code>?page=../../../../etc/passwd</code>","جرب SSTI: <code>{{7*7}}</code>","أدوات: Burp, sqlmap, ffuf, gobuster (على الهدف المسموح فقط)"]],
+["Cryptography",["حدد النوع من الشكل: = في النهاية يعني Base64، حروف a-f وأرقام يعني Hex","استخدم تبويب فك الشفرات","كلاسيكي (Caesar, Vigenere, Rail fence): dcode.fr","Hash: hashid ثم CrackStation أو hashcat","RSA: جرب factordb.com لو n صغير، وRsaCtfTool","XOR: جرب مفتاح بايت واحد، أو خمّن بداية النص <code>flag{</code>"]],
+["Forensics",["<code>file</code> و<code>exiftool</code> و<code>strings</code> و<code>binwalk -e</code>","الصور: steghide, zsteg, stegsolve, تحقق من بيانات بعد نهاية الملف","Pcap: Wireshark ← Follow TCP Stream وExport Objects","ذاكرة: volatility3 (pslist, cmdline, filescan)","قرص: autopsy, foremost"]],
+["Malware / Reverse",["<code>file</code> + <code>strings</code> + hash على VirusTotal","Ghidra أو IDA أو radare2 للتحليل الساكن","شغله داخل VM معزولة فقط","UPX: <code>upx -d</code>. .NET: ILSpy. Python exe: pyinstxtractor. APK: jadx"]],
+["OSINT",["exiftool: GPS والكاميرا والتاريخ","بحث عكسي: Google Lens وYandex وTinEye","لافتات، لغة، ظلال، لوحات سيارات ← حدد الموقع","اسم مستخدم: sherlock. نطاقات: whois وcrt.sh. أرشيف: Wayback"]],
+["Network",["Wireshark: Statistics ← Conversations وProtocol Hierarchy","دور على credentials في HTTP/FTP/Telnet وعلى DNS غريب","nmap -sC -sV للأجهزة المسموح فحصها"]],
+["Exploitation",["<code>checksec</code> و<code>file</code>","لقط الـ offset بـ <code>cyclic</code> من pwntools","ret2win أو ROP (ROPgadget)","Format string لتسريب العناوين","gdb + pwndbg ثم سكربت pwntools"]],
+["Mobile",["<code>apktool d app.apk</code> أو jadx-gui","دور على flag وapi key في strings","AndroidManifest.xml: exported components","Frida للـ runtime hooks"]],
+["Bash / General",["اقرأ الوصف زين، الدلائل غالباً بالصياغة","جرب Google بنص السؤال","انتبه لصيغة الفلاق المطلوبة في التحدي"]]];
+$("#hints").innerHTML=HINTS.map(([t,l],i)=>`<details${i?"":" open"}><summary>${t}</summary><ol>${l.map(x=>"<li>"+x+"</li>").join("")}</ol></details>`).join("");
+/* ---------- examples ---------- */
+const EX=[["Base64","ZmxhZ3toZWxsb19jdGZ9"],["ROT13","synt{uryyb_pgs}"],["Hex","666c61677b6865787d"],["Binary","01100110 01101100 01100001 01100111 01111011 01100010 01101001 01101110 01111101"],["Caesar","Wklv lv d whvw"],["Atbash","uozt{zgyzhs}"],["Morse","..-. .-.. .- --. / .. ... / ..-. ..- -."],["Base32","MZWGCZ33NFRGK5DFPE======"],["URL encoding","flag%7Burl_enc%7D"],["Base64 ثم Hex (طبقتين)","NjY2YzYxNjc3YjcyNjU3NjY1NzI3MzY1N2Q="],["Reverse","}esrever{galf"]];
+$("#exs").innerHTML=EX.map(([n,v],i)=>`<div class="ex"><span><b>${n}</b><br><code>${esc(v)}</code></span><button class="btn alt" style="margin:0" data-i="${i}">جرّب</button></div>`).join("");
+$("#exs").onclick=e=>{const i=e.target.dataset.i;if(i==null)return;$("#inp").value=EX[i][1];document.querySelector('[data-t="dec"]').click();runDecoder()};
+</script>
+</body>
+</html>
