@@ -1,220 +1,662 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Hackton alotaibi 1st</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<title>CTF Helper — مساعد تحديات الأمن السيبراني</title>
 <style>
-:root{--bg:#f3f5f8;--card:#fff;--tx:#101828;--mut:#5a6578;--ac:#2f4bff;--on:#fff;--bd:#d9dfe8;--code:#eaeef5;--flag:#ffd24a;--flagtx:#2b2200;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--card:#171e2e;--tx:#e8ecf5;--mut:#98a3b8;--ac:#8196ff;--on:#0f1420;--bd:#2b3550;--code:#0b101b}}
-:root[data-theme="dark"]{--bg:#0f1420;--card:#171e2e;--tx:#e8ecf5;--mut:#98a3b8;--ac:#8196ff;--on:#0f1420;--bd:#2b3550;--code:#0b101b}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.7 Tajawal,system-ui,"Segoe UI",Tahoma,sans-serif}
-.wrap{max-width:860px;margin:0 auto;padding:20px 16px 48px}
-h1{font-size:2rem;margin:.2em 0 0;font-weight:800;letter-spacing:-.01em}
-.sub{color:var(--mut);margin:0 0 18px}
-nav{display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--bd);margin-bottom:18px}
-nav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mut);font:inherit;font-weight:700;padding:10px 14px;cursor:pointer;white-space:nowrap}
-nav button[aria-selected="true"]{color:var(--tx);border-bottom-color:var(--ac)}
-button:focus-visible,textarea:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
-section{display:none}section.on{display:block}
-textarea{width:100%;min-height:110px;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:12px;font:15px/1.5 ui-monospace,Menlo,Consolas,monospace;direction:ltr;text-align:left}
-.btn{background:var(--ac);color:var(--on);border:0;border-radius:8px;padding:10px 20px;font:inherit;font-weight:700;cursor:pointer;margin-top:10px}
-.btn.alt{background:var(--code);color:var(--tx)}
-.step{border:1px solid var(--bd);background:var(--card);border-radius:8px;padding:10px 12px;margin:10px 0}
-.step b{color:var(--ac)}
-pre,code{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr;text-align:left}
-pre{background:var(--code);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:6px 0;white-space:pre-wrap;word-break:break-all;font-size:14px}
-.flag{background:var(--flag);color:var(--flagtx);font-weight:800;padding:12px 14px;border-radius:8px;margin:12px 0;direction:ltr;text-align:left;word-break:break-all}
-.drop{border:2px dashed var(--bd);border-radius:10px;padding:28px;text-align:center;color:var(--mut);background:var(--card)}
-.drop.over{border-color:var(--ac)}
-details{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;margin:8px 0}
-summary{cursor:pointer;font-weight:700}
-ol,ul{padding-inline-start:22px;margin:.5em 0}
-.ex{display:flex;gap:8px;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;margin:6px 0}
-.ex code{overflow-wrap:anywhere;font-size:13px}
-.links a{display:inline-block;margin:4px 0 4px 10px;color:var(--ac);font-weight:700}
-footer{margin-top:36px;color:var(--mut);text-align:center;font-weight:700}
-.note{color:var(--mut);font-size:.92rem}
+:root{
+  --bg:#0f1115; --surface:#171a21; --surface2:#1f2330; --border:#2a2f3d;
+  --text:#e8e9ed; --muted:#9aa1b2; --accent:#5ee6c6; --accent2:#7aa2ff;
+  --mono:ui-monospace,Consolas,monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f5f6f8; --surface:#ffffff; --surface2:#eef0f4; --border:#dde1e8;
+    --text:#1b1e25; --muted:#60667a; --accent:#0d9488; --accent2:#3b5bdb;
+    color-scheme: light;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1115; --surface:#171a21; --surface2:#1f2330; --border:#2a2f3d;
+  --text:#e8e9ed; --muted:#9aa1b2; --accent:#5ee6c6; --accent2:#7aa2ff;
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,Segoe UI,Tahoma,Arial,sans-serif;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  min-height:100vh;
+}
+header{
+  padding:18px 16px; border-bottom:1px solid var(--border);
+  background:var(--surface); position:sticky; top:0; z-index:5;
+  padding-top:calc(18px + env(safe-area-inset-top,0px));
+}
+header h1{margin:0; font-size:1.25rem;}
+header p{margin:4px 0 0; color:var(--muted); font-size:.85rem;}
+.wrap{max-width:960px; margin:0 auto; padding:16px;}
+.tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;}
+.tab{padding:8px 14px; border-radius:10px; background:var(--surface2); border:1px solid var(--border); cursor:pointer; color:var(--text); font-size:.9rem;}
+.tab.active{background:var(--accent); color:#0b0d10; font-weight:600; border-color:var(--accent);}
+.panel{display:none;}
+.panel.active{display:block;}
+.card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:14px;}
+.card.highlight{border-color:var(--accent);}
+.card h2{margin:0 0 10px; font-size:1.05rem; color:var(--accent2);}
+textarea,input[type=text]{
+  width:100%; background:var(--surface2); color:var(--text); border:1px solid var(--border);
+  border-radius:10px; padding:10px; font-family:var(--mono); font-size:.9rem; resize:vertical;
+}
+textarea{min-height:80px;}
+input[type=text]{margin-top:8px;}
+button{background:var(--accent); color:#0b0d10; border:none; border-radius:10px; padding:9px 16px; font-weight:600; cursor:pointer; font-size:.88rem; margin:8px 4px 0 0;}
+button.secondary{background:var(--surface2); color:var(--text); border:1px solid var(--border);}
+.results{margin-top:10px; display:flex; flex-direction:column; gap:8px;}
+.result-item{background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-family:var(--mono); font-size:.85rem; word-break:break-all; position:relative;}
+.result-item .label{color:var(--accent); font-weight:700; display:block; margin-bottom:4px; font-family:inherit;}
+.result-item .copy{position:absolute; left:8px; top:8px; font-size:.7rem; padding:3px 8px; margin:0;}
+.hint{color:var(--muted); font-size:.82rem; margin-top:6px; line-height:1.7;}
+details{background:var(--surface2); border:1px solid var(--border); border-radius:10px; margin-bottom:8px; padding:0;}
+details > summary{padding:12px 14px; cursor:pointer; font-weight:600; color:var(--accent2); list-style:none;}
+details > summary::-webkit-details-marker{display:none;}
+details[open] > summary{border-bottom:1px solid var(--border);}
+.details-body{padding:12px 14px; font-size:.9rem; line-height:1.9;}
+.details-body ul{margin:6px 0; padding-inline-start:20px;}
+.details-body code{background:var(--bg); padding:2px 6px; border-radius:6px; font-family:var(--mono);}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+@media (max-width:600px){.grid2{grid-template-columns:1fr;}}
+footer{text-align:center; color:var(--muted); font-size:.78rem; padding:20px;}
 </style>
 </head>
 <body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
+<header>
+  <h1>🧩 CTF Helper</h1>
+  <p>أداة مساعدة لفك التشفيرات، تحديد الـ Hash، تحليل الصور، ومنهجية حل لكل فئة من تحديات CyberTalents</p>
+</header>
+
 <div class="wrap">
-<h1>Hackton alotaibi </h1>
-<p class="sub"> </p>
-<nav role="tablist" id="tabs">
- <button role="tab" aria-selected="true" data-t="dec">فك الشفرات</button>
- <button role="tab" aria-selected="false" data-t="file">تحليل ملف أو صورة</button>
- <button role="tab" aria-selected="false" data-t="hint">طريقة الحل</button>
- <button role="tab" aria-selected="false" data-t="ex">أمثلة</button>
- <button role="tab" aria-selected="false" data-t="tools">أدوات</button>
-</nav>
+  <div class="tabs">
+    <div class="tab active" data-tab="decoder">🔓 فكّاك التشفير</div>
+    <div class="tab" data-tab="hash">#️⃣ تحديد Hash</div>
+    <div class="tab" data-tab="image">🖼️ تحليل صورة</div>
+    <div class="tab" data-tab="guides">📚 منهجيات الحل</div>
+    <div class="tab" data-tab="tools">🛠️ أدوات مفيدة</div>
+  </div>
 
-<section id="dec" class="on">
- <p>الصق النص المشفر. الأداة تجرب Base64 وBase32 وHex وBinary وMorse وURL وROT13 وCaesar وAtbash وXOR وVigenere وتفك عدة طبقات.</p>
- <textarea id="inp" placeholder="مثال: ZmxhZ3toZWxsb19jdGZ9" spellcheck="false"></textarea>
- <button class="btn" id="go">فك التشفير</button>
- <div id="out" aria-live="polite"></div>
-</section>
+  <!-- DECODER -->
+  <div class="panel active" id="decoder">
+    <div class="card highlight">
+      <h2>🚀 فحص سريع شامل</h2>
+      <textarea id="decInput" placeholder="الصق أي نص غامض وشوف كل الاحتمالات دفعة وحدة"></textarea>
+      <div>
+        <button onclick="runAllDecodes()">افحص بكل الطرق</button>
+        <button class="secondary" onclick="getEl('decInput').value='';getEl('decResults').innerHTML='';">مسح</button>
+      </div>
+      <p class="hint">يجرب تلقائيًا كل التشفيرات تحت بضغطة وحدة. ولو تبي تشتغل على نوع معين لحاله بمدخل خاص فيه، كل تشفير تحت له كرت مستقل 👇</p>
+      <div class="results" id="decResults"></div>
+    </div>
 
-<section id="file">
- <div class="drop" id="drop">اسحب صورة أو ملف هنا، أو <button class="btn alt" id="pick" style="margin:0">اختر ملف</button><input type="file" id="fi" hidden></div>
- <div id="fout" aria-live="polite"></div>
-</section>
+    <div class="card">
+      <h2>🔤 Caesar / ROT13</h2>
+      <textarea id="in_caesar" placeholder="النص هنا"></textarea>
+      <input type="text" id="caesar_shift" placeholder="قيمة الإزاحة (1-25) — فاضي = 13 (ROT13)">
+      <div>
+        <button onclick="caesarApply()">طبّق الإزاحة</button>
+        <button class="secondary" onclick="caesarBrute()">جرب كل الإزاحات (Bruteforce)</button>
+      </div>
+      <p class="hint">ROT13 (إزاحة 13) نفسه للتشفير والفك.</p>
+      <div class="results" id="out_caesar"></div>
+    </div>
 
-<section id="hint"><div id="hints"></div></section>
-<section id="ex"><p>اضغط «جرّب» وينتقل النص لخانة فك الشفرات.</p><div id="exs"></div></section>
+    <div class="card">
+      <h2>🧮 XOR</h2>
+      <textarea id="in_xor" placeholder="نص أو hex، مثال: 1a2b3c"></textarea>
+      <input type="text" id="xor_key" placeholder="المفتاح — نص، أو hex مثل 7 أو 0x7">
+      <div>
+        <button onclick="xorApply()">طبّق المفتاح</button>
+        <button class="secondary" onclick="tryXorBruteforce(getEl('out_xor'), getEl('in_xor').value)">Bruteforce كل مفتاح (byte واحد)</button>
+      </div>
+      <p class="hint">لو الإدخال hex صالح بيتعامل معه كبايتات، غير كذا يأخذه كحروف ASCII عادية.</p>
+      <div class="results" id="out_xor"></div>
+    </div>
 
-<section id="tools" class="links">
- <p>مواقع تفيدك مع أي تحدي:</p>
- <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener">CyberChef</a>
- <a href="https://www.dcode.fr/en" target="_blank" rel="noopener">dCode</a>
- <a href="http://factordb.com/" target="_blank" rel="noopener">FactorDB</a>
- <a href="https://crackstation.net/" target="_blank" rel="noopener">CrackStation</a>
- <a href="https://lens.google.com/" target="_blank" rel="noopener">Google Lens</a>
- <a href="https://yandex.com/images/" target="_blank" rel="noopener">Yandex Images</a>
- <a href="https://tineye.com/" target="_blank" rel="noopener">TinEye</a>
- <a href="https://www.aperisolve.com/" target="_blank" rel="noopener">Aperi’Solve (stego)</a>
- <a href="https://jwt.io/" target="_blank" rel="noopener">jwt.io</a>
- <a href="https://www.virustotal.com/" target="_blank" rel="noopener">VirusTotal</a>
- <a href="https://web.archive.org/" target="_blank" rel="noopener">Wayback Machine</a>
- <a href="https://cybertalents.com/challenges/all" target="_blank" rel="noopener">CyberTalents</a>
- <p class="note" </p>
-</section>
+    <div class="card">
+      <h2>🚂 Rail Fence</h2>
+      <textarea id="in_rail" placeholder="النص المشفر"></textarea>
+      <input type="text" id="rail_n" placeholder="عدد الصفوف (rails) — فاضي = يجرب من 2 إلى 6">
+      <button onclick="railFenceApply()">فك التشفير</button>
+      <p class="hint">لو تعرف عدد الصفوف بالضبط حطه، غير كذا بيطلع كل الاحتمالات من 2 إلى 6.</p>
+      <div class="results" id="out_rail"></div>
+    </div>
+    <!-- بقية التشفيرات (Base64, Hex, Binary...) تنبني تلقائيًا هنا أسفل -->
+  </div>
 
-<footer>dev by : "abdullah alaotaibi school" student staff</footer>
+  <!-- HASH -->
+  <div class="panel" id="hash">
+    <div class="card">
+      <h2>الصق الـ Hash</h2>
+      <input type="text" id="hashInput" placeholder="مثال: 5f4dcc3b5aa765d61d8327deb882cf99">
+      <button onclick="identifyHash()">حدد النوع</button>
+      <div class="results" id="hashResults"></div>
+      <p class="hint">التحديد يعتمد على طول الـ hash وصيغته. لفكّه جرب: CrackStation أو hashes.com أونلاين، أو <code>hashcat</code>/<code>john</code> محليًا مع wordlist متل rockyou.txt.</p>
+    </div>
+  </div>
+
+  <!-- IMAGE -->
+  <div class="panel" id="image">
+    <div class="card">
+      <h2>ارفع الصورة</h2>
+      <input type="file" id="imgInput" accept="image/*" onchange="handleImage(event)">
+      <div id="imgPreviewWrap" style="margin-top:10px;"></div>
+      <div class="results" id="imgResults"></div>
+    </div>
+    <div class="card">
+      <h2>🔎 بحث عكسي يدوي بنفس الصورة</h2>
+      <p class="hint">المتصفح لأسباب أمنية ما يقدر يرفع صورتك تلقائيًا لمواقع خارجية من صفحة زي هذي (قيود CSP) — ولا توجد أداة ويب تقدر فعليًا تتجاوز هذا القيد. الحل: اضغط زر النسخ، وبعدين روح لأي موقع من الأزرار وافتح صندوق البحث واضغط Ctrl+V (أو Cmd+V على Mac) ليلصق الصورة مباشرة.</p>
+      <button onclick="copyImageToClipboard()">📋 انسخ الصورة للحافظة</button>
+      <button class="secondary" onclick="window.open('https://lens.google.com/','_blank')">Google Lens</button>
+      <button class="secondary" onclick="window.open('https://images.google.com/','_blank')">Google Images</button>
+      <button class="secondary" onclick="window.open('https://yandex.com/images/','_blank')">Yandex Images</button>
+      <button class="secondary" onclick="window.open('https://tineye.com/','_blank')">TinEye</button>
+      <p class="hint" id="clipHint"></p>
+    </div>
+  </div>
+
+  <!-- GUIDES -->
+  <div class="panel" id="guides">
+    <div class="card">
+      <h2>منهجية التفكير حسب الفئة</h2>
+
+      <div class="result-item" style="margin-bottom:14px;">
+        <span class="label">🎯 الخطوات العامة اللي تسويها بأي تحدي (بالترتيب)</span>
+        <ol style="margin:8px 0 0; padding-inline-start:20px; line-height:1.9;">
+          <li>اقرأ اسم ووصف التحدي كويس — فيه تلميح دايمًا، غالبًا الاسم نفسه يدلك على الفئة أو الأسلوب</li>
+          <li>حمّل الملف/افتح الرابط المرفق، وحدد نوعه (نص، صورة، ملف تنفيذي، pcap، موقع...)</li>
+          <li>طبّق الفحص الأولي حسب النوع (تبويب الفئة تحت أو تبويب "تحليل صورة")</li>
+          <li>لو طلعت لك بيانات غريبة (نص عشوائي/أرقام)، رجّعها لتبويب "فكّاك التشفير"</li>
+          <li>دوّر دايمًا على نمط <code>flag{...}</code> أو <code>CTF{...}</code> بأي مخرجات تحصلها — هذا شكل الفلاق بأغلب منصات CyberTalents، ولما تشوفه يكون هذا جوابك النهائي اللي تسلمه بالموقع</li>
+          <li>لو انحشرت، بدّل زاوية التفكير (فئة ثانية) أو دور على Writeups لتحديات مشابهة بالاسم نفسه لتتعلم الأسلوب</li>
+        </ol>
+      </div>
+
+      <details open><summary>🔑 Cryptography</summary><div class="details-body"><ul>
+        <li>اسأل نفسك: النص <code>base64</code>؟ (غالبًا ينتهي بـ <code>=</code> ويحتوي أحرف وأرقام فقط)</li>
+        <li>شكل hex؟ (أرقام 0-9 وحروف a-f فقط، طوله زوجي)</li>
+        <li>فيه نقط وشرطات متباعدة؟ جرب Morse. أرقام بس 0 و1؟ جرب Binary</li>
+        <li>نص عادي لكن غريب؟ جرب Caesar/ROT13 (كل الإزاحات)</li>
+        <li>أرقام كبيرة + كلمة RSA/p,q,n,e؟ استخدم <code>RsaCtfTool</code> أو factordb.com لتفكيك n</li>
+        <li>XOR؟ لو عندك المفتاح جرب كل بايت، أو known-plaintext إذا تعرف جزء من الفلاق (مثلاً flag{)</li>
+        <li>Vigenère أو تشفير غير مذكور هنا؟ استخدم <code>CyberChef</code> (أقوى أداة أونلاين لأي تشفير تقريبًا)</li>
+      </ul></div></details>
+
+      <details><summary>🌐 Web Security</summary><div class="details-body"><ul>
+        <li>افحص مصدر الصفحة (Ctrl+U) والـ Comments المخفية وملفات JS</li>
+        <li>جرب <code>/robots.txt</code>, <code>/.git/</code>, <code>/admin</code>, <code>/backup</code></li>
+        <li>SQL Injection: جرب <code>' OR 1=1--</code> بالفورمز، أو استخدم <code>sqlmap</code></li>
+        <li>افحص الكوكيز — هل فيها قيمة base64 أو JWT تقدر تعدلها؟</li>
+        <li>IDOR: غيّر الـ ID بالرابط (user_id=1 → 2) وشوف وش يصير</li>
+        <li>LFI: جرب <code>?page=../../../../etc/passwd</code></li>
+        <li>افحص الـ Headers بالـ Network tab (F12) — أحيانًا الفلاق بالـ Response Headers</li>
+      </ul></div></details>
+
+      <details><summary>🔍 Digital Forensics</summary><div class="details-body"><ul>
+        <li>أول خطوة دايمًا: <code>file filename</code> ثم <code>strings filename | grep -i flag</code></li>
+        <li>صور: افحص الميتاداتا بـ <code>exiftool</code> (أو تبويب "تحليل صورة" بهذي الأداة)، وجرب steganography بـ <code>steghide</code> أو <code>zsteg</code></li>
+        <li>ملف يبين تالف؟ افحص الـ magic bytes بـ Hex Editor وقارنها بالصيغة الصحيحة (PNG يبدأ بـ 89 50 4E 47)</li>
+        <li>ملفات مخفية جوا ملف ثاني؟ جرب <code>binwalk -e filename</code></li>
+        <li>PCAP؟ افتحه بـ Wireshark وتابع TCP Stream، دور على HTTP/FTP credentials</li>
+        <li>Memory dump؟ استخدم <code>Volatility</code></li>
+        <li>ملف مضغوط بباسورد؟ جرب <code>fcrackzip</code> أو <code>John the Ripper</code> مع rockyou.txt</li>
+      </ul></div></details>
+
+      <details><summary>⚙️ Malware / Reverse Engineering</summary><div class="details-body"><ul>
+        <li>ابدأ بـ <code>strings binary | grep -i flag</code> — أحيانًا الفلاق موجود مباشرة!</li>
+        <li>حدد نوع الملف بـ <code>file</code> ثم افتحه بـ <code>Ghidra</code> أو <code>IDA Free</code></li>
+        <li>دور على دوال باسم مريب متل <code>check_flag</code>, <code>validate</code>, <code>strcmp</code></li>
+        <li>فيه تشفير جوا الكود؟ تتبعه يدويًا أو اكتب سكريبت Python يحاكي نفس العملية بالعكس</li>
+        <li>استخدم <code>x32dbg/x64dbg</code> أو <code>gdb</code> للتتبع الديناميكي (breakpoints عند المقارنات)</li>
+      </ul></div></details>
+
+      <details><summary>🛰️ Network Security</summary><div class="details-body"><ul>
+        <li>Wireshark: فلتر بـ <code>http</code> أو <code>ftp</code> أو <code>dns</code> حسب نوع الترافيك</li>
+        <li>Follow TCP/HTTP Stream يطلع المحادثة كاملة نصيًا</li>
+        <li>دور على بيانات دخول متبادلة بنص واضح</li>
+        <li>بروتوكول غريب؟ ابحث باسمه + "wireshark dissector"</li>
+      </ul></div></details>
+
+      <details><summary>🕵️ OSINT</summary><div class="details-body"><ul>
+        <li>صورة؟ افحص EXIF لموقع GPS (تبويب "تحليل صورة")، أو استخدم بحث عكسي</li>
+        <li>اسم مستخدم؟ جرب نفس الاسم بمواقع تانية (Twitter, GitHub, LinkedIn)</li>
+        <li>دومين/إيميل؟ جرب <code>whois</code>, Shodan، أو قواعد بيانات التسريبات العامة</li>
+        <li>استخدم <code>theHarvester</code> لجمع المعلومات تلقائيًا</li>
+      </ul></div></details>
+
+      <details><summary>📱 Mobile Security</summary><div class="details-body"><ul>
+        <li>APK: فك الضغط بـ <code>apktool d app.apk</code> وافحص <code>AndroidManifest.xml</code> والكود بـ <code>jadx-gui</code></li>
+        <li>دور على Hardcoded secrets/keys جوا كود Java/Kotlin المفكوك</li>
+        <li>افحص <code>strings.xml</code> وملفات assets داخل الـ APK</li>
+      </ul></div></details>
+    </div>
+
+    <div class="card">
+      <h2>✅ عادات عامة تفيدك بأي تحدي</h2>
+      <ul>
+        <li>لما تستلم ملف: <code>file</code> ثم <code>strings</code> ثم <code>exiftool</code> — بالترتيب، دايمًا</li>
+        <li>الفلاق غالبًا بصيغة <code>flag{...}</code> أو <code>CTF{...}</code> — دور عليها بالـ grep مباشرة</li>
+        <li>تعبت بطريقة وحدة؟ بدّل الزاوية (Forensics بدل Crypto مثلاً)</li>
+        <li>اقرأ اسم التحدي ووصفه كويس — غالبًا فيه تلميح مباشر بالاسم نفسه</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="panel" id="tools">
+    <div class="card">
+      <h2>🛠️ أدوات تحتاجها دايمًا</h2>
+      <div class="grid2">
+        <div class="result-item"><span class="label">CyberChef</span>فك/تشفير كل شي بسحب وإفلات — gchq.github.io/CyberChef</div>
+        <div class="result-item"><span class="label">CrackStation</span>فك الهاشات الشائعة أونلاين</div>
+        <div class="result-item"><span class="label">exiftool</span>قراءة ميتاداتا الصور والملفات</div>
+        <div class="result-item"><span class="label">binwalk</span>استخراج ملفات مخفية جوا ملفات تانية</div>
+        <div class="result-item"><span class="label">steghide / zsteg</span>إخفاء/استخراج بيانات من الصور (Steganography)</div>
+        <div class="result-item"><span class="label">Wireshark</span>تحليل ملفات PCAP لحركة الشبكة</div>
+        <div class="result-item"><span class="label">Ghidra / IDA Free</span>تحليل البرامج التنفيذية</div>
+        <div class="result-item"><span class="label">John the Ripper / Hashcat</span>كسر الباسوردات والهاشات محليًا</div>
+        <div class="result-item"><span class="label">sqlmap</span>اكتشاف واستغلال SQL Injection تلقائيًا</div>
+        <div class="result-item"><span class="label">Burp Suite</span>اعتراض وتعديل طلبات الويب</div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<footer>أداة تعليمية لمساعدتك تفهم المنهجية — القوة الحقيقية بإنك تفهم ليش الحل صح، مو بس تطلعه 💪</footer>
+
 <script>
-const $=s=>document.querySelector(s);
-const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-/* ---------- tabs ---------- */
-document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
-  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));
+/* ===== Utilities ===== */
+function getEl(id){ return document.getElementById(id); }
+
+function isPrintable(s){
+  if(!s || s.length===0) return false;
+  let good=0;
+  for(const ch of s){ const c=ch.charCodeAt(0); if((c>=32&&c<=126)||c===9||c===10||c===13) good++; }
+  return (good/s.length) > 0.85;
+}
+
+function addResult(container,label,value){
+  if(value===null||value===undefined||value==='') return;
+  value=String(value);
+  const div=document.createElement('div');
+  div.className='result-item';
+  div.dataset.val=value;
+  const esc=value.replace(/</g,'&lt;');
+  div.innerHTML=`<span class="label">${label}</span><button class="copy secondary" onclick="navigator.clipboard.writeText(this.parentElement.dataset.val)">نسخ</button><div style="margin-top:14px">${esc}</div>`;
+  container.appendChild(div);
+}
+
+/* ===== Tabs ===== */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    getEl(t.dataset.tab).classList.add('active');
+  });
 });
-/* ---------- decoders ---------- */
-const KNOWN=/\b(?:flag|ctf|cyber|cybertalents|htb|thm|picoctf)\{[\w\-!@#$%^&*.,:;?+= \/]{2,100}\}/i;
-const CLEAN=/[A-Za-z0-9_]{2,15}\{[\w\-!@#$%^&*.,:;?+= \/]{3,100}\}|\b[a-f0-9]{32}\b|\b[a-f0-9]{40}\b|\b[a-f0-9]{64}\b/;
-const WORDS=new Set("the be to of and a in that have it for not on with he as you do at this but his by from they we say her she or an will my one all would there their is are was this test hello flag secret password admin key".split(" "));
-const ENC=new Set(["base64","base32","hex","binary","url","decimal","octal","morse"]);
+
+/* ===== Image / EXIF ===== */
+let currentImageFile=null;
+function handleImage(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  currentImageFile=file;
+  const url=URL.createObjectURL(file);
+  getEl('imgPreviewWrap').innerHTML=`<img src="${url}" style="max-width:100%;border-radius:10px;border:1px solid var(--border)">`;
+  const results=getEl('imgResults');
+  results.innerHTML='';
+  const imgEl=new Image();
+  imgEl.src=url;
+  imgEl.onload=function(){
+    try{
+      EXIF.getData(imgEl, function(){
+        const tags=EXIF.getAllTags(this);
+        const keys=Object.keys(tags);
+        if(keys.length===0){
+          addResult(results,'EXIF','ما فيه بيانات EXIF واضحة بهذي الصورة (أو انمسحت قبل الرفع).');
+        }else{
+          keys.forEach(k=>{ let v=tags[k]; if(typeof v==='object') v=JSON.stringify(v); addResult(results,k,v); });
+          if(tags.GPSLatitude && tags.GPSLongitude){
+            const toDeg=(arr,ref)=>{ let d=arr[0]+arr[1]/60+arr[2]/3600; if(ref==='S'||ref==='W') d=-d; return d; };
+            const latDec=toDeg(tags.GPSLatitude,tags.GPSLatitudeRef);
+            const lonDec=toDeg(tags.GPSLongitude,tags.GPSLongitudeRef);
+            addResult(results,'📍 رابط الموقع على الخريطة', `https://www.google.com/maps?q=${latDec},${lonDec}`);
+          }
+        }
+      });
+    }catch(err){ addResult(results,'EXIF','تعذر قراءة EXIF من هذا الملف.'); }
+  };
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const bytes=new Uint8Array(ev.target.result);
+    let raw=''; for(let i=0;i<bytes.length;i++) raw+=String.fromCharCode(bytes[i]);
+    const flagMatch=raw.match(/[A-Za-z0-9_]{2,10}\{[^}]{3,80}\}/g);
+    if(flagMatch){ [...new Set(flagMatch)].forEach(f=>addResult(results,'🚩 احتمال Flag داخل بيانات الملف!',f)); }
+    const strs=(raw.match(/[\x20-\x7e]{5,}/g)||[]);
+    const uniq=[...new Set(strs)].slice(0,40);
+    if(uniq.length) addResult(results,'نصوص ظاهرة داخل الملف (أول 40 — متل strings)', uniq.join('\n'));
+  };
+  reader.readAsArrayBuffer(file);
+}
+function convertToPng(file){
+  return new Promise((res)=>{
+    const img=new Image();
+    img.onload=()=>{ const c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight; c.getContext('2d').drawImage(img,0,0); c.toBlob(b=>res(b),'image/png'); };
+    img.src=URL.createObjectURL(file);
+  });
+}
+async function copyImageToClipboard(){
+  const hint=getEl('clipHint');
+  if(!currentImageFile){ hint.textContent='ارفع صورة أول من فوق.'; return; }
+  try{
+    const blob = currentImageFile.type==='image/png' ? currentImageFile : await convertToPng(currentImageFile);
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    hint.textContent='✅ انسخت الصورة! روح لأي موقع من الأزرار واضغط Ctrl+V بصندوق البحث.';
+  }catch(err){
+    hint.textContent='⚠️ المتصفح ما يدعم النسخ المباشر هنا. حمّل الصورة الأصلية يدويًا واسحبها/ارفعها بالموقع مباشرة.';
+  }
+}
+
+/* ===== Decode primitives ===== */
+function tryBase64(s){ try{ const c=s.trim(); if(!/^[A-Za-z0-9+/=\s]+$/.test(c)) return null; return atob(c.replace(/\s/g,'')); }catch(e){ return null; } }
+function base64Encode(s){ try{ return btoa(unescape(encodeURIComponent(s))); }catch(e){ return null; } }
+
+function tryHex(s){
+  const c=s.trim().replace(/\s|0x/g,'');
+  if(!/^[0-9a-fA-F]+$/.test(c) || c.length%2!==0) return null;
+  let out=''; for(let i=0;i<c.length;i+=2) out+=String.fromCharCode(parseInt(c.substr(i,2),16));
+  return out;
+}
+function hexEncode(s){ return Array.from(s).map(c=>c.charCodeAt(0).toString(16).padStart(2,'0')).join(' '); }
+
+function tryBinary(s){
+  const c=s.trim().replace(/\s/g,'');
+  if(!/^[01]+$/.test(c) || c.length%8!==0) return null;
+  let out=''; for(let i=0;i<c.length;i+=8) out+=String.fromCharCode(parseInt(c.substr(i,8),2));
+  return out;
+}
+function binEncode(s){ return Array.from(s).map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' '); }
+
+function rot(s,n){ return s.replace(/[a-zA-Z]/g,c=>{ const base=c<='Z'?65:97; return String.fromCharCode((c.charCodeAt(0)-base+n+26)%26+base); }); }
+function rot47(s){ return s.replace(/[!-~]/g,c=>String.fromCharCode(33+((c.charCodeAt(0)-33+47)%94))); }
+
+function tryUrlDecode(s){ try{ return decodeURIComponent(s.trim()); }catch(e){ return null; } }
+
 const MORSE={'.-':'A','-...':'B','-.-.':'C','-..':'D','.':'E','..-.':'F','--.':'G','....':'H','..':'I','.---':'J','-.-':'K','.-..':'L','--':'M','-.':'N','---':'O','.--.':'P','--.-':'Q','.-.':'R','...':'S','-':'T','..-':'U','...-':'V','.--':'W','-..-':'X','-.--':'Y','--..':'Z','-----':'0','.----':'1','..---':'2','...--':'3','....-':'4','.....':'5','-....':'6','--...':'7','---..':'8','----.':'9'};
-const bytes2s=b=>Array.from(b,c=>String.fromCharCode(c)).join("");
-const s2bytes=s=>Uint8Array.from(s,c=>c.charCodeAt(0)&255);
-const printable=s=>s.length?[...s].filter(c=>{const k=c.charCodeAt(0);return(k>=32&&k<127)||k==9||k==10||k==13}).length/s.length:0;
-const score=s=>s.toLowerCase().split(/[^a-z]+/).filter(w=>WORDS.has(w)).length;
-const shift=(t,k)=>t.replace(/[a-z]/gi,c=>{const b=c<'a'?65:97;return String.fromCharCode((c.charCodeAt(0)-b+k+26)%26+b)});
-const vig=(t,key)=>{let i=0;return t.replace(/[a-z]/gi,c=>{const b=c<'a'?65:97,k=key.charCodeAt(i++%key.length)-97;return String.fromCharCode((c.charCodeAt(0)-b-k+26)%26+b)})};
-function b32(t){const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";let bits="";for(const c of t.toUpperCase().replace(/=+$/,"")){const i=A.indexOf(c);if(i<0)throw 0;bits+=i.toString(2).padStart(5,"0")}
- const o=[];for(let i=0;i+8<=bits.length;i+=8)o.push(parseInt(bits.slice(i,i+8),2));return bytes2s(o)}
-function decoders(t){
- const r=[],add=(n,v)=>{if(typeof v==="string"&&v!==t&&v.length)r.push([n,v])};
- const T=t.trim();
- const tryit=(n,f)=>{try{add(n,f())}catch(e){}};
- tryit("base64",()=>{if(!/^[A-Za-z0-9+/_\-=\s]{4,}$/.test(T))throw 0;return bytes2s(Uint8Array.from(atob(T.replace(/\s/g,"").replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0)))});
- tryit("base32",()=>{if(!/^[A-Za-z2-7=\s]{8,}$/.test(T))throw 0;return b32(T.replace(/\s/g,""))});
- tryit("hex",()=>{const h=T.replace(/0x|[\s:,]/g,"");if(!/^([0-9a-f]{2})+$/i.test(h))throw 0;return bytes2s(h.match(/../g).map(x=>parseInt(x,16)))});
- tryit("binary",()=>{const g=T.match(/[01]{8}/g);if(!g||g.join("").length<T.replace(/\s/g,"").length*0.9)throw 0;return bytes2s(g.map(x=>parseInt(x,2)))});
- tryit("decimal",()=>{if(!/^[\d\s,]+$/.test(T))throw 0;const n=T.split(/[\s,]+/).map(Number);if(n.some(x=>x>255))throw 0;return bytes2s(n)});
- tryit("octal",()=>{if(!/^[0-7\s]+$/.test(T))throw 0;return bytes2s(T.split(/\s+/).map(x=>parseInt(x,8)))});
- tryit("url",()=>decodeURIComponent(T));
- tryit("morse",()=>{if(!/^[.\-\/\s]+$/.test(T))throw 0;return T.split(/\s*\/\s*|\s{3,}/).map(w=>w.split(/\s+/).map(c=>MORSE[c]||"?").join("")).join(" ")});
- add("reverse",[...T].reverse().join(""));
- add("rot13",shift(T,13));
- add("atbash",T.replace(/[a-z]/gi,c=>String.fromCharCode((c<'a'?155:219)-c.charCodeAt(0))));
- for(let k=1;k<26;k++){if(k!==13)add("caesar +"+k,shift(T,k))}
- const b=s2bytes(T);
- for(let k=1;k<256;k++)add("xor "+k,bytes2s(b.map(c=>c^k)));
- for(const key of ["key","flag","ctf","secret","password","admin","cyber","talents","cybertalents"])add("vigenere "+key,vig(T,key));
- return r;
+const MORSE_REV=Object.fromEntries(Object.entries(MORSE).map(([k,v])=>[v,k]));
+function tryMorse(s){
+  const c=s.trim();
+  if(!/^[.\-\s/]+$/.test(c)) return null;
+  const words=c.split(/\s*\/\s*/);
+  const out=words.map(w=>w.trim().split(/\s+/).map(ch=>MORSE[ch]||'?').join('')).join(' ');
+  return (out.includes('?') && out.replace(/\?/g,'').length < out.length*0.5) ? null : out;
 }
-const meaningful=(n,v)=>KNOWN.test(v)||(ENC.has(n)?(printable(v)>0.95&&v.length>=3):score(v)>=2);
-function solve(text){
- const seen=new Set([text]);let q=[[text,"",0]],steps=[],found=null;
- while(q.length&&!found&&steps.length<40){
-  const [cur,path,d]=q.shift();if(d>=4)continue;
-  for(const [n,v] of decoders(cur)){
-   if(seen.has(v)||!meaningful(n,v))continue;seen.add(v);
-   const p=path?path+" ← "+n:n;steps.push([p,v]);
-   const m=v.match(KNOWN)||(ENC.has(n)?v.match(CLEAN):null);
-   if(m){found=[m[0],p];break}
-   q.push([v,p,d+1]);
-  }}
- return{steps,found};
+function textToMorse(s){ return s.toUpperCase().split('').map(c=>c===' '?'/':(MORSE_REV[c]||'')).filter(x=>x!=='').join(' '); }
+
+function tryBase32(s){
+  const c=s.trim().toUpperCase().replace(/=+$/,'');
+  if(!/^[A-Z2-7]+$/.test(c)) return null;
+  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits=''; for(const ch of c){ const idx=alphabet.indexOf(ch); if(idx===-1) return null; bits+=idx.toString(2).padStart(5,'0'); }
+  let out=''; for(let i=0;i+8<=bits.length;i+=8) out+=String.fromCharCode(parseInt(bits.substr(i,8),2));
+  return out.length? out : null;
 }
-function runDecoder(){
- const t=$("#inp").value;if(!t.trim()){$("#out").innerHTML='<p class="note">اكتب أو الصق نص أول.</p>';return}
- const {steps,found}=solve(t);let h="";
- if(found)h+=`<div class="flag">FLAG: ${esc(found[0])}<br><small>الطريقة: ${esc(found[1])}</small></div>`;
- h+=steps.map(([p,v])=>`<div class="step"><b>${esc(p)}</b><pre>${esc(v.slice(0,400))}</pre></div>`).join("");
- if(!steps.length)h+='<p>ما لقيت فك واضح. جرب شفرة بمفتاح (Vigenere/XOR مع مفتاح معروف) أو راجع تبويب «طريقة الحل».</p>';
- else if(!found)h+='<p class="note">ما ظهر فلاق جاهز. راجع الطبقات فوق، ممكن تحتاج خطوة يدوية.</p>';
- $("#out").innerHTML=h;
+function base32Encode(s){
+  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits=''; for(const c of s) bits+=c.charCodeAt(0).toString(2).padStart(8,'0');
+  while(bits.length%5!==0) bits+='0';
+  let out=''; for(let i=0;i<bits.length;i+=5) out+=alphabet[parseInt(bits.substr(i,5),2)];
+  while(out.length%8!==0) out+='=';
+  return out;
 }
-$("#go").onclick=runDecoder;
-/* ---------- file analyzer ---------- */
-const MAGIC=[["FFD8FF","JPEG"],["89504E47","PNG"],["47494638","GIF"],["25504446","PDF"],["504B0304","ZIP / DOCX / APK / JAR"],["52617221","RAR"],["377ABCAF","7z"],["7F454C46","ELF"],["4D5A","EXE / DLL (PE)"],["1F8B","GZIP"],["494433","MP3"],["52494646","WAV / AVI / WEBP"],["D0CF11E0","OLE (doc/xls)"],["SQLite","SQLite"]];
-function exif(b){
- if(b[0]!==0xFF||b[1]!==0xD8)return null;let i=2,out={};
- while(i<b.length-4){if(b[i]!==0xFF)break;const m=b[i+1],len=(b[i+2]<<8)|b[i+3];
-  if(m===0xE1&&bytes2s(b.slice(i+4,i+8))==="Exif"){const t=i+10,le=b[t]===0x49,
-   u16=o=>le?b[o]|(b[o+1]<<8):(b[o]<<8)|b[o+1],u32=o=>le?(b[o]|(b[o+1]<<8)|(b[o+2]<<16)|(b[o+3]<<24))>>>0:((b[o]<<24)|(b[o+1]<<16)|(b[o+2]<<8)|b[o+3])>>>0;
-   const asc=(o,n)=>bytes2s(b.slice(n>4?t+u32(o+8):o+8,(n>4?t+u32(o+8):o+8)+n)).replace(/\0.*$/,"");
-   const rat=o=>u32(o+4)?u32(o)/u32(o+4):0;
-   const ifd=(off,cb)=>{const n=u16(t+off);for(let k=0;k<n;k++)cb(u16(t+off+2+k*12),t+off+2+k*12)};
-   let gps=0,exo=0;
-   ifd(u32(t+4),(tag,o)=>{if(tag===0x010F)out.Make=asc(o,u32(o+4));if(tag===0x0110)out.Model=asc(o,u32(o+4));if(tag===0x0131)out.Software=asc(o,u32(o+4));if(tag===0x0132)out.Date=asc(o,u32(o+4));if(tag===0x8825)gps=u32(o+8);if(tag===0x8769)exo=u32(o+8)});
-   if(exo)ifd(exo,(tag,o)=>{if(tag===0x9003)out.Taken=asc(o,u32(o+4))});
-   if(gps){const g={};ifd(gps,(tag,o)=>{const p=t+u32(o+8);if(tag===1||tag===3)g[tag]=String.fromCharCode(b[o+8]);if(tag===2||tag===4)g[tag]=rat(p)+rat(p+8)/60+rat(p+16)/3600});
-    if(g[2]!=null&&g[4]!=null){const la=(g[1]==="S"?-1:1)*g[2],lo=(g[3]==="W"?-1:1)*g[4];out.GPS=la.toFixed(6)+", "+lo.toFixed(6);out.map="https://www.google.com/maps?q="+la+","+lo}}
-   return out}
-  i+=2+len}
- return out}
-function analyze(file){
- const rd=new FileReader();rd.onload=()=>{
-  const b=new Uint8Array(rd.result),hex=Array.from(b.slice(0,8),x=>x.toString(16).padStart(2,"0")).join("").toUpperCase();
-  const s=bytes2s(b);let h=`<div class="step"><b>${esc(file.name)}</b> — ${b.length.toLocaleString()} bytes`;
-  const mg=MAGIC.find(([m])=>m==="SQLite"?s.startsWith("SQLite format"):hex.startsWith(m));h+=`<br>النوع حسب البداية: ${mg?mg[1]:"غير معروف"}`;
-  if(mg&&!file.name.toLowerCase().includes(mg[1].slice(0,3).toLowerCase())&&mg[1]!=="ZIP / DOCX / APK / JAR")h+=`<br>تنبيه: امتداد الملف ممكن مو مطابق لنوعه الحقيقي.`;h+="</div>";
-  const ex=exif(b);
-  if(ex&&Object.keys(ex).length){h+='<div class="step"><b>EXIF</b><pre>'+esc(Object.entries(ex).filter(([k])=>k!=="map").map(([k,v])=>k+": "+v).join("\n"))+"</pre>";
-   if(ex.map)h+=`<a href="${ex.map}" target="_blank" rel="noopener">افتح الموقع على الخريطة</a>`;h+="</div>"}
-  let extra=-1;
-  if(hex.startsWith("FFD8")){const i=s.lastIndexOf("\xFF\xD9");if(i>0&&i+2<b.length)extra=i+2}
-  if(hex.startsWith("89504E47")){const i=s.lastIndexOf("IEND");if(i>0&&i+8<b.length)extra=i+8}
-  if(extra>0&&b.slice(extra).some(x=>x))h+=`<div class="step"><b>بيانات مخفية بعد نهاية الصورة (${b.length-extra} byte)</b><pre>${esc(s.slice(extra,extra+300))}</pre></div>`;
-  const emb=[["PK\x03\x04","ZIP"],["Rar!","RAR"],["%PDF","PDF"],["\x7fELF","ELF"],["7z\xBC\xAF","7z"]].map(([m,n])=>[n,s.indexOf(m,4)]).filter(x=>x[1]>0);
-  if(emb.length)h+=`<div class="step"><b>ملفات مدمجة:</b> ${emb.map(([n,i])=>n+" عند "+i).join(" ، ")}<br><span class="note">جرّب: binwalk -e FILE</span></div>`;
-  const strs=s.match(/[\x20-\x7e]{6,}/g)||[],hits=new Set();
-  strs.forEach(x=>{const m=x.match(KNOWN)||x.match(CLEAN);if(m)hits.add(m[0]);
-   if(/^[A-Za-z0-9+/=]{16,}$/.test(x)){try{const d=atob(x);if(printable(d)>0.9){const m2=d.match(KNOWN);hits.add(m2?m2[0]:"base64 → "+d.slice(0,80))}}catch(e){}}});
-  hits.forEach(f=>h+=`<div class="flag">${esc(f)}</div>`);
-  h+=`<details><summary>Strings (${strs.length})</summary><pre>${esc(strs.slice(0,150).join("\n"))}</pre></details>`;
-  h+=`<div class="links"><b>بحث عكسي بالصور:</b> <a href="https://lens.google.com/" target="_blank" rel="noopener">Google Lens</a><a href="https://yandex.com/images/" target="_blank" rel="noopener">Yandex</a><a href="https://tineye.com/" target="_blank" rel="noopener">TinEye</a><a href="https://www.aperisolve.com/" target="_blank" rel="noopener">Aperi’Solve</a></div>`;
-  $("#fout").innerHTML=h};
- rd.readAsArrayBuffer(file)}
-const fi=$("#fi"),drop=$("#drop");$("#pick").onclick=()=>fi.click();fi.onchange=()=>fi.files[0]&&analyze(fi.files[0]);
-drop.ondragover=e=>{e.preventDefault();drop.classList.add("over")};drop.ondragleave=()=>drop.classList.remove("over");
-drop.ondrop=e=>{e.preventDefault();drop.classList.remove("over");e.dataTransfer.files[0]&&analyze(e.dataTransfer.files[0])};
-/* ---------- hints ---------- */
-const HINTS=[
-["Web",["شوف المصدر (Ctrl+U) والتعليقات","جرب /robots.txt و/sitemap.xml و/.git و/admin","افحص الكوكيز وJWT من تبويب Application","جرب SQLi: <code>' OR 1=1-- -</code>","جرب LFI: <code>?page=../../../../etc/passwd</code>","جرب SSTI: <code>{{7*7}}</code>","أدوات: Burp, sqlmap, ffuf, gobuster (على الهدف المسموح فقط)"]],
-["Cryptography",["حدد النوع من الشكل: = في النهاية يعني Base64، حروف a-f وأرقام يعني Hex","استخدم تبويب فك الشفرات","كلاسيكي (Caesar, Vigenere, Rail fence): dcode.fr","Hash: hashid ثم CrackStation أو hashcat","RSA: جرب factordb.com لو n صغير، وRsaCtfTool","XOR: جرب مفتاح بايت واحد، أو خمّن بداية النص <code>flag{</code>"]],
-["Forensics",["<code>file</code> و<code>exiftool</code> و<code>strings</code> و<code>binwalk -e</code>","الصور: steghide, zsteg, stegsolve, تحقق من بيانات بعد نهاية الملف","Pcap: Wireshark ← Follow TCP Stream وExport Objects","ذاكرة: volatility3 (pslist, cmdline, filescan)","قرص: autopsy, foremost"]],
-["Malware / Reverse",["<code>file</code> + <code>strings</code> + hash على VirusTotal","Ghidra أو IDA أو radare2 للتحليل الساكن","شغله داخل VM معزولة فقط","UPX: <code>upx -d</code>. .NET: ILSpy. Python exe: pyinstxtractor. APK: jadx"]],
-["OSINT",["exiftool: GPS والكاميرا والتاريخ","بحث عكسي: Google Lens وYandex وTinEye","لافتات، لغة، ظلال، لوحات سيارات ← حدد الموقع","اسم مستخدم: sherlock. نطاقات: whois وcrt.sh. أرشيف: Wayback"]],
-["Network",["Wireshark: Statistics ← Conversations وProtocol Hierarchy","دور على credentials في HTTP/FTP/Telnet وعلى DNS غريب","nmap -sC -sV للأجهزة المسموح فحصها"]],
-["Exploitation",["<code>checksec</code> و<code>file</code>","لقط الـ offset بـ <code>cyclic</code> من pwntools","ret2win أو ROP (ROPgadget)","Format string لتسريب العناوين","gdb + pwndbg ثم سكربت pwntools"]],
-["Mobile",["<code>apktool d app.apk</code> أو jadx-gui","دور على flag وapi key في strings","AndroidManifest.xml: exported components","Frida للـ runtime hooks"]],
-["Bash / General",["اقرأ الوصف زين، الدلائل غالباً بالصياغة","جرب Google بنص السؤال","انتبه لصيغة الفلاق المطلوبة في التحدي"]]];
-$("#hints").innerHTML=HINTS.map(([t,l],i)=>`<details${i?"":" open"}><summary>${t}</summary><ol>${l.map(x=>"<li>"+x+"</li>").join("")}</ol></details>`).join("");
-/* ---------- examples ---------- */
-const EX=[["Base64","ZmxhZ3toZWxsb19jdGZ9"],["ROT13","synt{uryyb_pgs}"],["Hex","666c61677b6865787d"],["Binary","01100110 01101100 01100001 01100111 01111011 01100010 01101001 01101110 01111101"],["Caesar","Wklv lv d whvw"],["Atbash","uozt{zgyzhs}"],["Morse","..-. .-.. .- --. / .. ... / ..-. ..- -."],["Base32","MZWGCZ33NFRGK5DFPE======"],["URL encoding","flag%7Burl_enc%7D"],["Base64 ثم Hex (طبقتين)","NjY2YzYxNjc3YjcyNjU3NjY1NzI3MzY1N2Q="],["Reverse","}esrever{galf"]];
-$("#exs").innerHTML=EX.map(([n,v],i)=>`<div class="ex"><span><b>${n}</b><br><code>${esc(v)}</code></span><button class="btn alt" style="margin:0" data-i="${i}">جرّب</button></div>`).join("");
-$("#exs").onclick=e=>{const i=e.target.dataset.i;if(i==null)return;$("#inp").value=EX[i][1];document.querySelector('[data-t="dec"]').click();runDecoder()};
+
+function tryBase58(s){
+  const alphabet='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  const c=s.trim();
+  if(!/^[1-9A-HJ-NP-Za-km-z]{4,}$/.test(c)) return null;
+  let num=0n;
+  for(const ch of c){ const idx=alphabet.indexOf(ch); if(idx===-1) return null; num=num*58n+BigInt(idx); }
+  let hex=num.toString(16); if(hex.length%2) hex='0'+hex;
+  let out=''; for(let i=0;i<hex.length;i+=2) out+=String.fromCharCode(parseInt(hex.substr(i,2),16));
+  return out;
+}
+function base58Encode(s){
+  const alphabet='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  const bytes=Array.from(s).map(c=>c.charCodeAt(0));
+  let num=0n; for(const b of bytes) num=num*256n+BigInt(b);
+  let out=''; if(num===0n) out='1';
+  while(num>0n){ out=alphabet[Number(num%58n)]+out; num/=58n; }
+  for(const b of bytes){ if(b===0) out='1'+out; else break; }
+  return out;
+}
+
+function tryBase85(s){
+  const str=s.trim().replace(/^<~/,'').replace(/~>$/,'').replace(/\s/g,'');
+  if(str.length<4 || !/^[!-u]+$/.test(str)) return null;
+  const out=[];
+  for(let i=0;i<str.length;i+=5){
+    const chunk=str.substr(i,5), padded=chunk.padEnd(5,'u');
+    let n=0; for(const c of padded) n=n*85+(c.charCodeAt(0)-33);
+    out.push(...[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].slice(0,chunk.length-1));
+  }
+  return String.fromCharCode(...out);
+}
+
+function tryA1Z26(s){
+  const c=s.trim();
+  if(!/^[\d\s,\-]+$/.test(c)) return null;
+  const nums=c.split(/[\s,\-]+/).filter(x=>x.length);
+  if(nums.length<2) return null;
+  let out=''; for(const n of nums){ const v=parseInt(n,10); if(v<1||v>26) return null; out+=String.fromCharCode(96+v); }
+  return out;
+}
+function textToA1Z26(s){ return s.toUpperCase().replace(/[^A-Z]/g,'').split('').map(c=>c.charCodeAt(0)-64).join(' '); }
+
+function atbash(s){ return s.replace(/[a-zA-Z]/g,c=> c===c.toUpperCase() ? String.fromCharCode(90-(c.charCodeAt(0)-65)) : String.fromCharCode(122-(c.charCodeAt(0)-97))); }
+
+function bytesFromInput(s){
+  const hexClean=s.trim().replace(/\s|0x/g,'');
+  if(/^[0-9a-fA-F]+$/.test(hexClean) && hexClean.length%2===0 && hexClean.length>=2){
+    const arr=[]; for(let i=0;i<hexClean.length;i+=2) arr.push(parseInt(hexClean.substr(i,2),16));
+    return arr;
+  }
+  return Array.from(s).map(c=>c.charCodeAt(0));
+}
+function tryXorBruteforce(container,s){
+  const bytes=bytesFromInput(s);
+  if(bytes.length<2) return;
+  let found=0;
+  for(let key=1;key<256 && found<5;key++){
+    const out=bytes.map(b=>String.fromCharCode(b^key)).join('');
+    if(isPrintable(out) && /flag|ctf|[a-zA-Z]{4,}/i.test(out)){ addResult(container,`XOR Key=${key} (0x${key.toString(16)})`, out); found++; }
+  }
+}
+
+function railFenceDecode(clean,rails){
+  if(rails<2) return clean;
+  let rail=0,dir=1; const pattern=[];
+  for(let i=0;i<clean.length;i++){ pattern.push(rail); rail+=dir; if(rail===0||rail===rails-1) dir*=-1; }
+  const counts=new Array(rails).fill(0); pattern.forEach(r=>counts[r]++);
+  const railsChars=[]; let idx=0;
+  for(let r=0;r<rails;r++){ railsChars.push(clean.slice(idx,idx+counts[r]).split('')); idx+=counts[r]; }
+  const pos=new Array(rails).fill(0); let out='';
+  for(let i=0;i<clean.length;i++){ const r=pattern[i]; out+=railsChars[r][pos[r]++]; }
+  return out;
+}
+function tryRailFence(container,s){
+  const clean=s.trim();
+  if(clean.length<6) return;
+  for(let rails=2;rails<=6;rails++){
+    const out=railFenceDecode(clean,rails);
+    if(/flag|ctf/i.test(out)) addResult(container,`Rail Fence (rails=${rails})`, out);
+  }
+}
+
+/* ===== Quick scan (all at once) ===== */
+function runAllDecodes(){
+  const input=getEl('decInput').value;
+  const container=getEl('decResults');
+  container.innerHTML='';
+  if(!input.trim()) return;
+
+  const checks=[
+    ['Base64 Decode', tryBase64(input)],
+    ['Hex Decode', tryHex(input)],
+    ['Binary Decode', tryBinary(input)],
+    ['Base32 Decode', tryBase32(input)],
+    ['Base58 Decode', tryBase58(input)],
+    ['Base85 / ASCII85 Decode', tryBase85(input)],
+  ];
+  checks.forEach(([label,val])=>{ if(val && isPrintable(val)) addResult(container,label,val); });
+
+  const url=tryUrlDecode(input);
+  if(url && url!==input.trim() && isPrintable(url)) addResult(container,'URL Decode',url);
+
+  const morse=tryMorse(input);
+  if(morse) addResult(container,'Morse Decode',morse);
+
+  let anyCaesar=false;
+  for(let n=1;n<=25;n++){
+    const r=rot(input,n);
+    if(r!==input && /\b(flag|ctf|the|and|is|you|this)\b/i.test(r)){ addResult(container,`Caesar Shift ${n}`+(n===13?' (ROT13)':''), r); anyCaesar=true; }
+  }
+  if(!anyCaesar){ const r13=rot(input,13); if(r13!==input) addResult(container,'ROT13 (افتراضي)',r13); }
+
+  const r47=rot47(input);
+  if(r47!==input && /flag|ctf|[a-zA-Z]{4,}/i.test(r47)) addResult(container,'ROT47',r47);
+
+  const a1z=tryA1Z26(input);
+  if(a1z) addResult(container,'A1Z26 (أرقام → حروف)',a1z);
+
+  const rev=input.split('').reverse().join('');
+  if(rev!==input) addResult(container,'النص معكوس (Reverse)',rev);
+
+  tryXorBruteforce(container,input);
+  tryRailFence(container,input);
+
+  if(container.innerHTML===''){
+    addResult(container,'ملاحظة','ما لقيت فك تلقائي واضح. جرب الكروت المخصصة تحت، أو استخدم CyberChef لتشفيرات أكثر تعقيدًا (Vigenère, RSA...).');
+  }
+}
+
+/* ===== Caesar card ===== */
+function caesarApply(){
+  const input=getEl('in_caesar').value, out=getEl('out_caesar'); out.innerHTML='';
+  if(!input.trim()) return;
+  let n=parseInt(getEl('caesar_shift').value,10);
+  if(isNaN(n)) n=13;
+  n=((n%26)+26)%26;
+  addResult(out,`الناتج بإزاحة ${n}`, rot(input,n));
+}
+function caesarBrute(){
+  const input=getEl('in_caesar').value, out=getEl('out_caesar'); out.innerHTML='';
+  if(!input.trim()) return;
+  for(let n=1;n<=25;n++) addResult(out,`إزاحة ${n}`+(n===13?' (ROT13)':''), rot(input,n));
+}
+
+/* ===== XOR card ===== */
+function parseXorKey(k){
+  k=k.trim();
+  if(/^0x[0-9a-fA-F]+$/.test(k)) return [parseInt(k,16)];
+  if(/^[0-9a-fA-F]+$/.test(k) && k.length%2===0 && k.length>=2) return bytesFromInput(k);
+  return Array.from(k).map(c=>c.charCodeAt(0));
+}
+function xorApply(){
+  const input=getEl('in_xor').value, keyRaw=getEl('xor_key').value, out=getEl('out_xor'); out.innerHTML='';
+  if(!input.trim()||!keyRaw.trim()){ addResult(out,'⚠️','لازم تدخل النص والمفتاح.'); return; }
+  const bytes=bytesFromInput(input), key=parseXorKey(keyRaw);
+  addResult(out,'✅ الناتج', bytes.map((b,i)=>String.fromCharCode(b^key[i%key.length])).join(''));
+}
+
+/* ===== Rail Fence card ===== */
+function railFenceApply(){
+  const input=getEl('in_rail').value, out=getEl('out_rail'); out.innerHTML='';
+  if(!input.trim()) return;
+  const nRaw=getEl('rail_n').value.trim();
+  if(/^\d+$/.test(nRaw)){
+    addResult(out, `الناتج (rails=${nRaw})`, railFenceDecode(input, parseInt(nRaw,10)));
+  }else{
+    for(let n=2;n<=6;n++) addResult(out,`rails=${n}`, railFenceDecode(input,n));
+  }
+}
+
+/* ===== Generic one-cipher-per-card builder ===== */
+const CIPHERS={
+  base64:{icon:'🔡',title:'Base64',ph:'مثال: SGVsbG8=',hint:'يدعم التشفير والفك',decode:tryBase64,encode:base64Encode},
+  hex:{icon:'🔢',title:'Hex',ph:'مثال: 48656c6c6f',hint:'كل بايت = رقمين hex',decode:tryHex,encode:hexEncode},
+  binary:{icon:'💾',title:'Binary',ph:'مثال: 01001000 01101001',hint:'كل حرف = 8 bits',decode:tryBinary,encode:binEncode},
+  base32:{icon:'🅱️',title:'Base32',ph:'مثال: JBSWY3DP',hint:'يستخدم A-Z و 2-7',decode:tryBase32,encode:base32Encode},
+  base58:{icon:'₿',title:'Base58',ph:'مثال: 9Ajdvzr',hint:'مستخدم بعناوين Bitcoin، يستثني 0,O,I,l',decode:tryBase58,encode:base58Encode},
+  base85:{icon:'🅰️',title:'Base85 / ASCII85',ph:'مثال: <~87cURD_*#4DfTZ)+T~>',hint:'فك فقط حاليًا',decode:tryBase85,encode:null},
+  rot47:{icon:'🔄',title:'ROT47',ph:'نص يحتوي رموز ASCII قابلة للطباعة',hint:'self-inverse: نفس النتيجة للتشفير والفك',decode:rot47,encode:rot47},
+  url:{icon:'🌐',title:'URL Encode/Decode',ph:'مثال: Hello%20World',hint:'للروابط وقيم الـ query string',decode:tryUrlDecode,encode:s=>encodeURIComponent(s)},
+  morse:{icon:'📡',title:'Morse Code',ph:'مثال: .... . .-.. .-.. ---',hint:'افصل الحروف بمسافة والكلمات بـ /',decode:tryMorse,encode:textToMorse},
+  a1z26:{icon:'🔡',title:'A1Z26',ph:'مثال: 6 12 1 7',hint:'كل رقم = موقع الحرف بالأبجدية',decode:tryA1Z26,encode:textToA1Z26},
+  atbash:{icon:'🔁',title:'Atbash',ph:'نص عادي',hint:'A↔Z, B↔Y ... self-inverse',decode:atbash,encode:atbash},
+  reverse:{icon:'↩️',title:'عكس النص',ph:'نص عادي',hint:'self-inverse',decode:s=>s.split('').reverse().join(''),encode:s=>s.split('').reverse().join('')}
+};
+function runCipher(id,mode){
+  const cfg=CIPHERS[id], input=getEl('in_'+id).value, out=getEl('out_'+id);
+  out.innerHTML='';
+  if(!input.trim()) return;
+  const fn=mode==='decode'?cfg.decode:cfg.encode;
+  if(!fn) return;
+  const result=fn(input);
+  if(!result) addResult(out,'⚠️','ما قدرت أطبّق هذا على الإدخال — تأكد إن الصيغة صحيحة لهذا النوع.');
+  else addResult(out, mode==='decode'?'✅ الناتج':'✅ المشفّر', result);
+}
+(function buildGenericCards(){
+  const host=getEl('decoder');
+  ['base64','hex','binary','base32','base58','base85','rot47','url','morse','a1z26','atbash','reverse'].forEach(id=>{
+    const cfg=CIPHERS[id];
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`<h2>${cfg.icon} ${cfg.title}</h2>
+      <textarea id="in_${id}" placeholder="${cfg.ph}"></textarea>
+      <div><button onclick="runCipher('${id}','decode')">فك التشفير</button>${cfg.encode?`<button class="secondary" onclick="runCipher('${id}','encode')">تشفير</button>`:''}</div>
+      <p class="hint">${cfg.hint}</p>
+      <div class="results" id="out_${id}"></div>`;
+    host.appendChild(card);
+  });
+})();
+
+/* ===== Hash identifier ===== */
+function identifyHash(){
+  const h=getEl('hashInput').value.trim(), container=getEl('hashResults');
+  container.innerHTML='';
+  if(!h) return;
+  const len=h.length, isHex=/^[0-9a-fA-F]+$/.test(h);
+  const guesses=[];
+  if(isHex){
+    if(len===8) guesses.push('CRC32 (8 hex chars)');
+    if(len===32) guesses.push('MD5 (32 hex chars)');
+    if(len===40) guesses.push('SHA-1 (40 hex chars)');
+    if(len===56) guesses.push('SHA-224 (56 hex chars)');
+    if(len===64) guesses.push('SHA-256 (64 hex chars)');
+    if(len===96) guesses.push('SHA-384 (96 hex chars)');
+    if(len===128) guesses.push('SHA-512 / Whirlpool (128 hex chars)');
+  }
+  if(/^\$2[aby]?\$/.test(h)) guesses.push('bcrypt');
+  if(/^\$1\$/.test(h)) guesses.push('MD5 Crypt (Unix)');
+  if(/^\$6\$/.test(h)) guesses.push('SHA-512 Crypt (Unix)');
+  if(/^\$y\$|^\$7\$/.test(h)) guesses.push('yescrypt');
+  if(!isHex && /^[A-Za-z0-9+/]+={0,2}$/.test(h) && len%4===0) guesses.push('محتمل Base64 Encoded (مو Hash مباشر، جرب فك Base64 أولًا)');
+  if(h.split('.').length===3) guesses.push('محتمل JWT — جرب فكه بـ jwt.io');
+  if(guesses.length===0) guesses.push('ما قدرت أحدد النوع بثقة. جرب hash-identifier.online أو أمر hashid بالتيرمنال.');
+  guesses.forEach(g=>addResult(container,'احتمال',g));
+}
 </script>
 </body>
 </html>
